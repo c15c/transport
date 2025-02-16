@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Departures from Northshore Hamilton</title>
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIq6fHW9I4rZr6K/Zt1n1m+6Nf6I8dN9+8iZJpXqvE"
+    crossorigin="anonymous"
+  />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container">
+      <a class="navbar-brand" href="#">Northshore Departures</a>
+    </div>
+  </nav>
+
+  <div class="container my-5">
+    <h1 class="mb-4 text-center">Next Departures from Northshore Hamilton</h1>
+    <div class="row g-4">
+      <!-- CityCat Departures Card -->
+      <div class="col-md-6">
+        <div class="card shadow-sm">
+          <div class="card-header bg-info text-white">
+            <h5 class="card-title mb-0">CityCat Departures</h5>
+          </div>
+          <ul class="list-group list-group-flush" id="citycat-list">
+            <li class="list-group-item text-center" id="citycat-loading">Loading...</li>
+          </ul>
+        </div>
+      </div>
+      <!-- Bus Departures Card -->
+      <div class="col-md-6">
+        <div class="card shadow-sm">
+          <div class="card-header bg-success text-white">
+            <h5 class="card-title mb-0">Bus Departures</h5>
+          </div>
+          <ul class="list-group list-group-flush" id="bus-list">
+            <li class="list-group-item text-center" id="bus-loading">Loading...</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- Error Message Area -->
+    <div id="error-message" class="alert alert-danger mt-4 d-none" role="alert">
+      Oops, something went wrong while fetching departure data.
+    </div>
+  </div>
+
+  <!-- Load protobuf.js from CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/protobufjs/dist/protobuf.min.js"></script>
+  <!-- Bootstrap JS Bundle (with Popper) -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-q2FyGlL1vnJ7FZxjx5nryCW3bE2n3czd6Mfg1w+RtE3ZdzVV+2m8E0Q5W6OWfP7F"
+    crossorigin="anonymous"
+  ></script>
+  <script src="script.js"></script>
+</body>
+</html>
