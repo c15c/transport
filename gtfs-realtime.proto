@@ -1,0 +1,52 @@
+syntax = "proto2";
+
+package transit_realtime;
+
+// FeedHeader contains metadata for the feed.
+message FeedHeader {
+  required string gtfs_realtime_version = 1;
+  optional uint64 timestamp = 2;
+  optional string incrementality = 3;
+}
+
+// FeedEntity represents a single entity in the feed.
+message FeedEntity {
+  required string id = 1;
+  optional bool is_deleted = 2;
+  optional TripUpdate trip_update = 3;
+  // (Other fields such as vehicle and alert can be defined if needed)
+}
+
+// FeedMessage is the top-level message.
+message FeedMessage {
+  required FeedHeader header = 1;
+  repeated FeedEntity entity = 2;
+}
+
+// TripUpdate provides updates for a trip.
+message TripUpdate {
+  required TripDescriptor trip = 1;
+  repeated StopTimeUpdate stop_time_update = 2;
+  // (Other fields can be added as needed)
+}
+
+// TripDescriptor provides details about a trip.
+message TripDescriptor {
+  optional string trip_id = 1;
+  optional string route_id = 5;
+  // (Other fields can be defined here)
+}
+
+// StopTimeUpdate provides update information for a stop.
+message StopTimeUpdate {
+  optional string stop_id = 1;
+  optional TimeEvent arrival = 2;
+  optional TimeEvent departure = 3;
+  // (Other fields such as schedule_relationship can be added)
+}
+
+// TimeEvent contains a timestamp.
+message TimeEvent {
+  optional uint64 time = 1;
+  // (Other fields can be added as needed)
+}
