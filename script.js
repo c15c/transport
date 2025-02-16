@@ -4,9 +4,8 @@
 
 // The GTFS-RT feed endpoint for South East Queensland from TransLink.
 const FEED_URL = "https://translink.com.au/about-translink/open-data/gtfs-rt"; 
-// Set your target stop ID for Northshore Hamilton.
-// (Replace with the actual stop ID as provided in your static GTFS data.)
-const TARGET_STOP_ID = "NORTHSHORE_HAMILTON";
+// Set your target stop ID for Northshore Hamilton (updated to 318002).
+const TARGET_STOP_ID = "318002";
 
 // ----------------------
 // HELPER FUNCTIONS
@@ -78,7 +77,7 @@ function processFeed(feed) {
             const departureTime = formatTime(timeEvent.time);
             const departureObj = {
               route: routeId,
-              destination: "TBD", // In a full implementation, you would map trip data to a destination name.
+              destination: "TBD", // In a full implementation, map trip data to a destination name.
               departureTime: departureTime,
               timestamp: timeEvent.time
             };
