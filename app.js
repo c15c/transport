@@ -1,18 +1,73 @@
-// Replace original API calls with GTFS-RT endpoints
-const GTFS_ENDPOINTS = {
-    FERRY: 'https://gtfsrt.api.translink.com.au/feed/SEQ/VehiclePositions',
-    BUS: 'https://gtfsrt.api.translink.com.au/feed/SEQ/TripUpdates'
+// app.js
+const STOP_IDS = {
+    FERRY: '3026',    // Northshore Hamilton CityCat
+    BUS: '317474'     // Northshore Hamilton Bus
 };
 
-// You'll need a GTFS parser library like gtfs-realtime-bindings
-import { transit_realtime } from 'gtfs-realtime-bindings';
-
-async function fetchGTFS(url) {
-    const response = await fetch(url);
-    const buffer = await response.arrayBuffer();
-    return transit_realtime.FeedMessage.decode(new Uint8Array(buffer));
+async function fetchGTFSFeed() {
+    try {
+        const response = await fetch('https://gtfsrt.api.translink.com.au/feed/SEQ/TripUpdates');
+        const buffer = await response.arrayBuffer();
+        return transit_realtime.FeedMessage.decode(new Uint8Array(buffer));
+    } catch (error) {
+        console.error('Error fetching GTFS feed:', error);
+        return null;
+    }
 }
 
-// Initial load and periodic updates
+function processDepartures(feed, stopId) {
+    const departures = [];
+    
+    feed.entity.forEach(entity => {
+        if (entity.trip_update) {
+            const tripUpdate = entity.trip_update;
+            tripUpdate.stop_time_update.forEach(update => {
+                if (update.stop_id === stopId && update.departure) {
+                    const departureTime = update.departure.time;
+                    if (departureTime > Math.floor(Date.now() / 1000)) { // Only future departures
+                        departures.push({
+                            route: tripUpdate.trip.route_id,
+                            time: departureTime
+                        });
+                    }
+                }
+            });
+        }
+    });
+
+    // Sort and get next 5
+    return departures.sort((a, b) => a.time - b.time)
+                     .slice(0, 5)
+                     .map(d => ({
+                         route: d.route.replace('F', 'CityCat '), // Convert ferry route IDs
+                         time: new Date(d.time * 1000)
+                     }));
+}
+
+async function updateDepartures() {
+    const feed = await fetchGTFSFeed();
+    if (!feed) return;
+
+    const ferryData = processDepartures(feed, STOP_IDS.FERRY);
+    const busData = processDepartures(feed, STOP_IDS.BUS);
+
+    displayTimes('ferry-times', ferryData);
+    displayTimes('bus-times', busData);
+    document.getElementById('update-time').textContent = new Date().toLocaleTimeString();
+}
+
+function displayTimes(containerId, departures) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = departures.length > 0 
+        ? departures.map(d => `
+            <div class="time-item">
+                ${d.route}<br>
+                ${d.time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </div>
+        `).join('')
+        : '<div class="time-item">No upcoming services</div>';
+}
+
+// Initial load and refresh every 30 seconds
 updateDepartures();
-setInterval(updateDepartures, CONFIG.UPDATE_INTERVAL * 1000);
+setInterval(updateDepartures, 30000);
