@@ -1,6 +1,7 @@
-// Use the Translink open data endpoint – no API key is required
-// Adjust the URL path as needed based on your specific data requirements.
+// Translink open data endpoint – no API key required
 const GTFS_RT_FEED_URL = 'https://gtfsrt.api.translink.com.au/seq/tripupdates';
+// Using a free CORS proxy to bypass browser restrictions
+const PROXY_URL = 'https://thingproxy.freeboard.io/fetch/';
 
 document.addEventListener('DOMContentLoaded', function() {
   // Load the GTFS Realtime proto file
@@ -18,7 +19,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateDepartures() {
-      fetch(GTFS_RT_FEED_URL)
+      // Use the proxy to fetch data
+      fetch(PROXY_URL + GTFS_RT_FEED_URL)
         .then(response => {
           if (!response.ok) {
             throw new Error("Network response was not ok");
