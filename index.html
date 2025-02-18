@@ -2,33 +2,36 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Northshore Transport</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/gtfs-realtime-bindings@1.0.0/browser/gtfs-realtime-bindings.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Northshore Hamilton Departures</h1>
+        <header class="status-bar">
+            <div class="title">NORTHSHORE DEPARTURES</div>
+            <div class="update-time">UPDATED: <span id="update-time"></span></div>
+        </header>
         
-        <div class="departure-board">
-            <div class="transport-type">
-                <h2>CityCat Ferry</h2>
-                <div id="ferry-times" class="times"></div>
+        <div class="departure-grid">
+            <div class="transport-panel">
+                <div class="panel-header">CITYCAT FERRY</div>
+                <div id="ferry-times" class="times-grid"></div>
             </div>
             
-            <div class="transport-type">
-                <h2>Bus Services</h2>
-                <div id="bus-times" class="times"></div>
+            <div class="transport-panel">
+                <div class="panel-header">BUS SERVICES</div>
+                <div id="bus-times" class="times-grid"></div>
             </div>
         </div>
         
-        <div class="footer">
-            <p>Updated: <span id="update-time"></span></p>
-            <p>Data from Translink</p>
-        </div>
+        <footer class="info-bar">
+            <div class="refresh-cycle">REFRESHES EVERY 30 SECONDS</div>
+            <div class="data-source">TRANSLINK OPEN DATA</div>
+        </footer>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/gtfs-realtime-bindings@1.0.0/browser/gtfs-realtime-bindings.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
