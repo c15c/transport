@@ -8,7 +8,7 @@ const PROXY_URLS = [
 ];
 
 document.addEventListener('DOMContentLoaded', function() {
-  // Load the GTFS Realtime proto file
+  // Load the GTFS Realtime proto file; ensure this file is in the same directory as index.html
   protobuf.load("gtfs-realtime.proto", function(err, root) {
     if (err) {
       console.error("Error loading proto file:", err);
@@ -30,19 +30,23 @@ document.addEventListener('DOMContentLoaded', function() {
       const proxy = PROXY_URLS[proxyIndex];
       const fetchUrl = proxy + GTFS_RT_FEED_URL;
       console.log("Attempting to fetch data from:", fetchUrl);
-      return fetch(fetchUrl)
-        .then(response => {
-          console.log("Response from proxy:", proxy, response);
-          if (!response.ok) {
-            throw new Error("Network response not ok. Status: " + response.status);
-          }
-          return response.arrayBuffer();
-        })
-        .catch(err => {
-          console.error("Error with proxy", proxy, ":", err);
-          // Try next proxy if available
-          return tryFetchData(proxyIndex + 1);
-        });
+      return fetch(fetchUrl, {
+        headers: {
+          'Accept': 'application/x-protobuf'
+        }
+      })
+      .then(response => {
+        console.log("Response from proxy:", proxy, response);
+        if (!response.ok) {
+          throw new Error("Network response not ok. Status: " + response.status);
+        }
+        return response.arrayBuffer();
+      })
+      .catch(err => {
+        console.error("Error with proxy", proxy, ":", err);
+        // Try next proxy if available
+        return tryFetchData(proxyIndex + 1);
+      });
     }
 
     function processData(buffer) {
