@@ -1,147 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Northshore Hamilton Transit</title>
-    <style>
-        body {
-            font-family: monospace;
-            background-color: #f4f4f4;
-            color: #222;
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            line-height: 1.6;
-        }
-
-        .header {
-            border-bottom: 2px solid #222;
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-        }
-
-        .departures {
-            display: grid;
-            gap: 1rem;
-        }
-
-        .departure-card {
-            background-color: white;
-            border: 1px solid #222;
-            padding: 1rem;
-            display: grid;
-            grid-template-columns: auto 1fr auto;
-            gap: 1rem;
-            align-items: center;
-        }
-
-        .route-number {
-            font-size: 1.5rem;
-            font-weight: bold;
-            background: #222;
-            color: white;
-            padding: 0.5rem;
-            border-radius: 4px;
-            min-width: 3rem;
-            text-align: center;
-        }
-
-        .destination {
-            font-weight: bold;
-        }
-
-        .time {
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-
-        .last-updated {
-            margin-top: 2rem;
-            font-style: italic;
-            text-align: right;
-        }
-
-        @media (max-width: 600px) {
-            body {
-                padding: 10px;
-                margin: 10px;
-            }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Northshore Hamilton Transit</title>
+  <style>
+    body {
+      font-family: monospace;
+      background-color: #f4f4f4;
+      color: #222;
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .header {
+      border-bottom: 2px solid #222;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+    }
+    .departures {
+      display: grid;
+      gap: 1rem;
+    }
+    .departure-card {
+      background-color: white;
+      border: 1px solid #222;
+      padding: 1rem;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 1rem;
+      align-items: center;
+    }
+    .route-number {
+      font-size: 1.5rem;
+      font-weight: bold;
+      background: #222;
+      color: white;
+      padding: 0.5rem;
+      border-radius: 4px;
+      min-width: 3rem;
+      text-align: center;
+    }
+    .destination {
+      font-weight: bold;
+    }
+    .time {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    .last-updated {
+      margin-top: 2rem;
+      font-style: italic;
+      text-align: right;
+    }
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+        margin: 10px;
+      }
+    }
+  </style>
+  <!-- Include protobuf.js from a CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/protobufjs/6.11.2/protobuf.min.js"></script>
 </head>
 <body>
-    <div class="header">
-        <h1>Northshore Hamilton</h1>
-        <h2>Next Departures</h2>
-    </div>
-
-    <div class="departures">
-        <!-- Sample departures - you'll need to replace these with real data -->
-        <div class="departure-card">
-            <div class="route-number">CityCat</div>
-            <div>
-                <div class="destination">Northshore → City</div>
-                <div>Platform A</div>
-            </div>
-            <div class="time">3 min</div>
-        </div>
-
-        <div class="departure-card">
-            <div class="route-number">196</div>
-            <div>
-                <div class="destination">Northshore → City</div>
-                <div>Stop 2</div>
-            </div>
-            <div class="time">8 min</div>
-        </div>
-
-        <div class="departure-card">
-            <div class="route-number">CityCat</div>
-            <div>
-                <div class="destination">Northshore → Hamilton</div>
-                <div>Platform B</div>
-            </div>
-            <div class="time">12 min</div>
-        </div>
-
-        <div class="departure-card">
-            <div class="route-number">199</div>
-            <div>
-                <div class="destination">Northshore → New Farm</div>
-                <div>Stop 1</div>
-            </div>
-            <div class="time">15 min</div>
-        </div>
-
-        <div class="departure-card">
-            <div class="route-number">CityCat</div>
-            <div>
-                <div class="destination">Northshore → City</div>
-                <div>Platform A</div>
-            </div>
-            <div class="time">18 min</div>
-        </div>
-    </div>
-
-    <div class="last-updated">
-        Last updated: <span id="timestamp"></span>
-    </div>
-
-    <script>
-        function updateTimestamp() {
-            const now = new Date();
-            document.getElementById('timestamp').textContent = 
-                now.toLocaleTimeString('en-AU', { 
-                    hour: '2-digit', 
-                    minute: '2-digit',
-                    hour12: true 
-                });
-        }
-
-        // Update timestamp every minute
-        updateTimestamp();
-        setInterval(updateTimestamp, 60000);
-    </script>
+  <div class="header">
+    <h1>Northshore Hamilton</h1>
+    <h2>Next Departures</h2>
+  </div>
+  <div class="departures">
+    <!-- Dynamic departure cards will be inserted here -->
+    <p>Loading departures...</p>
+  </div>
+  <div class="last-updated">
+    Last updated: <span id="timestamp"></span>
+  </div>
+  <!-- Main JavaScript -->
+  <script src="main.js"></script>
 </body>
 </html>
