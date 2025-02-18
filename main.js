@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', function() {
       return;
     }
     const FeedMessage = root.lookupType("transit_realtime.FeedMessage");
-
+    
     function updateTimestamp() {
       const now = new Date();
       document.getElementById('timestamp').textContent = 
@@ -19,28 +19,40 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateDepartures() {
-      // Use the proxy to fetch data
-      fetch(PROXY_URL + GTFS_RT_FEED_URL)
+      const fetchUrl = PROXY_URL + GTFS_RT_FEED_URL;
+      console.log("Fetching data from:", fetchUrl);
+      fetch(fetchUrl)
         .then(response => {
+          console.log("Response received:", response);
           if (!response.ok) {
-            throw new Error("Network response was not ok");
+            throw new Error("Network response was not ok. Status: " + response.status);
           }
           return response.arrayBuffer();
         })
         .then(buffer => {
-          const message = FeedMessage.decode(new Uint8Array(buffer));
+          console.log("Fetched buffer length:", buffer.byteLength);
+          if (buffer.byteLength === 0) {
+            throw new Error("Empty response buffer received.");
+          }
+          let message;
+          try {
+            message = FeedMessage.decode(new Uint8Array(buffer));
+            console.log("Decoded GTFS Realtime message:", message);
+          } catch (decodeError) {
+            console.error("Error decoding GTFS Realtime data:", decodeError);
+            throw decodeError;
+          }
           const departuresContainer = document.querySelector('.departures');
           departuresContainer.innerHTML = "";
           const now = Date.now();
           let departures = [];
           
-          // Iterate through each feed entity
+          // Process each feed entity
           message.entity.forEach(entity => {
             if (entity.trip_update) {
               const trip = entity.trip_update.trip;
               const route = trip.route_id || "Unknown";
               
-              // Iterate through each stop update in the trip update
               if (entity.trip_update.stop_time_update && entity.trip_update.stop_time_update.length > 0) {
                 entity.trip_update.stop_time_update.forEach(update => {
                   if (update.departure_time) {
@@ -58,13 +70,11 @@ document.addEventListener('DOMContentLoaded', function() {
             }
           });
           
-          // Sort departures by departure time (soonest first)
           departures.sort((a, b) => a.departureTime - b.departureTime);
           
           if (departures.length === 0) {
             departuresContainer.innerHTML = "<p>No upcoming departures at the moment.</p>";
           } else {
-            // Limit to the next 5 departures
             departures.slice(0, 5).forEach(dep => {
               const minutes = Math.round((dep.departureTime - now) / 60000);
               const card = document.createElement('div');
@@ -82,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function() {
           updateTimestamp();
         })
         .catch(err => {
-          console.error("Error fetching GTFS realtime data:", err);
+          console.error("Error fetching or processing GTFS realtime data:", err);
           document.querySelector('.departures').innerHTML = "<p>Error loading departures data.</p>";
         });
     }
