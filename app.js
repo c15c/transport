@@ -56,16 +56,27 @@ async function updateDepartures() {
     document.getElementById('update-time').textContent = new Date().toLocaleTimeString();
 }
 
+// Previous JS code remains the same, just update the displayTimes function:
+
 function displayTimes(containerId, departures) {
     const container = document.getElementById(containerId);
     container.innerHTML = departures.length > 0 
         ? departures.map(d => `
             <div class="time-item">
-                ${d.route}<br>
-                ${d.time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                <span class="route-number">${d.route}</span>
+                <span class="departure-time">
+                    ${d.time.toLocaleTimeString([], { 
+                        hour: '2-digit', 
+                        minute: '2-digit',
+                        hour12: false 
+                    }).replace(':', '')}
+                </span>
             </div>
         `).join('')
-        : '<div class="time-item">No upcoming services</div>';
+        : `<div class="time-item">
+             <span class="route-number">--</span>
+             <span class="departure-time">----</span>
+           </div>`;
 }
 
 // Initial load and refresh every 30 seconds
